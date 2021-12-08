@@ -1,0 +1,21 @@
+<idea-plugin>
+    <id>me.rochblondiaux.headers</id>
+    <name>42 Headers</name>
+    <vendor email="contact@roch-blondiaux.com" url="https://www.roch-blondiauxcom">Roch Blondiaux</vendor>
+
+    <description><![CDATA[
+    Automatically add 42 headers on your projects.
+    ]]></description>
+
+    <!-- please see https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html
+         on how to target different products -->
+    <depends>com.intellij.java</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <!-- Add your extensions here -->
+    </extensions>
+
+    <actions>
+        <!-- Add your actions here -->
+    </actions>
+</idea-plugin>

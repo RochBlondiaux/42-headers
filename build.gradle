@@ -4,7 +4,9 @@ plugins {
 }
 
 group 'me.rochblondiaux'
-version '0.1'
+version '1.0'
+
+sourceCompatibility = 1.8
 
 repositories {
     mavenCentral()
@@ -13,12 +15,12 @@ repositories {
 dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
-    compileOnly 'org.projectlombok:lombok:1.18.22'
-    annotationProcessor 'org.projectlombok:lombok:1.18.22'
-
-    testCompileOnly 'org.projectlombok:lombok:1.18.22'
-    testAnnotationProcessor 'org.projectlombok:lombok:1.18.22'
 }
+
+publishPlugin {
+    token = System.getenv("ORG_GRADLE_PROJECT_intellijPublishToken")
+}
+
 
 // See https://github.com/JetBrains/gradle-intellij-plugin/
 intellij {
@@ -29,7 +31,6 @@ patchPluginXml {
       Add change notes here.<br>
       <em>most HTML tags may be used</em>"""
 }
-
 test {
     useJUnitPlatform()
 }

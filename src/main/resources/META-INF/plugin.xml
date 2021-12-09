@@ -1,10 +1,10 @@
 <idea-plugin>
     <id>me.rochblondiaux.headers</id>
     <name>42 Headers</name>
-    <vendor email="contact@roch-blondiaux.com" url="https://www.roch-blondiauxcom">Roch Blondiaux</vendor>
+    <vendor email="contact@roch-blondiaux.com" url="https://www.roch-blondiaux.com">Nesty Services</vendor>
 
     <description><![CDATA[
-    Automatically add 42 headers on your projects.
+    Automatically set 42 headers on your projects files.
     ]]></description>
 
     <!-- please see https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html
@@ -12,7 +12,8 @@
     <depends>com.intellij.java</depends>
 
     <extensions defaultExtensionNs="com.intellij">
-        <!-- Add your extensions here -->
+        <applicationConfigurable groupId="root" displayName="42 Header" id="preferences.42Header"
+                                 instance="me.rochblondiaux.headers.model.PluginSettings"/>
     </extensions>
 
     <actions>

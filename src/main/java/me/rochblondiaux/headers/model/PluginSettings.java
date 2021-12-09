@@ -17,12 +17,14 @@ import javax.swing.*;
 public class PluginSettings implements SearchableConfigurable {
 
     private SettingsUI ui;
-    private static final Header header;
+    public static final Header HEADER;
 
     static {
-        header = new Header(new Author("404",
+        HEADER = new Header(new Author("404",
                 "null@student.42-lyon.fr"),
                 "null");
+        ConfigurationUtils.init(HEADER);
+        ConfigurationUtils.update(HEADER);
     }
 
     @Override
@@ -39,26 +41,25 @@ public class PluginSettings implements SearchableConfigurable {
     @Override
     public @Nullable JComponent createComponent() {
         this.ui = new SettingsUI();
-        ConfigurationUtils.init(header);
-        ConfigurationUtils.update(header);
-        ui.getAuthorName().setText(header.getAuthor().getName());
-        ui.getAuthorEmail().setText(header.getAuthor().getEmail());
-        ui.getHeaderRaw().setText(header.getRaw());
+        ConfigurationUtils.update(HEADER);
+        ui.getAuthorName().setText(HEADER.getAuthor().getName());
+        ui.getAuthorEmail().setText(HEADER.getAuthor().getEmail());
+        ui.getHeaderRaw().setText(HEADER.getRaw());
         return ui.getPanel();
     }
 
     @Override
     public boolean isModified() {
-        return !(ui.getAuthorName().getText().equals(header.getAuthor().getName())
-                && ui.getAuthorEmail().getText().equals(header.getAuthor().getEmail())
-                && ui.getHeaderRaw().getText().equals(header.getRaw()));
+        return !(ui.getAuthorName().getText().equals(HEADER.getAuthor().getName())
+                && ui.getAuthorEmail().getText().equals(HEADER.getAuthor().getEmail())
+                && ui.getHeaderRaw().getText().equals(HEADER.getRaw()));
     }
 
     @Override
     public void apply() {
-        header.setRaw(ui.getHeaderRaw().getText());
-        header.getAuthor().setName(ui.getAuthorName().getText());
-        header.getAuthor().setEmail(ui.getAuthorEmail().getText());
-        ConfigurationUtils.save(header);
+        HEADER.setRaw(ui.getHeaderRaw().getText());
+        HEADER.getAuthor().setName(ui.getAuthorName().getText());
+        HEADER.getAuthor().setEmail(ui.getAuthorEmail().getText());
+        ConfigurationUtils.save(HEADER);
     }
 }

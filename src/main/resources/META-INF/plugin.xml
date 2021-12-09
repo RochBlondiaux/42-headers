@@ -18,5 +18,14 @@
 
     <actions>
         <!-- Add your actions here -->
+        <action id="42headers.event.keystroke" class="me.rochblondiaux.headers.listener.KeyStrokeListener"
+                text="Insert or Update Header" description="Insert or update header on top of current file.">
+            <add-to-group group-id="EditorActions" anchor="first"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="alt H" second-keystroke="ctrl H"/>
+        </action>
     </actions>
+
+    <applicationListeners>
+        <listener class="me.rochblondiaux.headers.listener.FileSaveListener" topic="com.intellij.openapi.vfs.newvfs.BulkFileListener"/>
+    </applicationListeners>
 </idea-plugin>

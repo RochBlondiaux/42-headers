@@ -14,6 +14,8 @@ public class SettingsUI {
     private JTextArea headerRaw;
     private JLabel authorNameLabel;
     private JLabel authorEmailLabel;
+    private JCheckBox notifications;
+    private JCheckBox autoUpdate;
 
     public JPanel getPanel() {
         return panel1;
@@ -29,5 +31,13 @@ public class SettingsUI {
 
     public JTextArea getHeaderRaw() {
         return headerRaw;
+    }
+
+    public JCheckBox getNotifications() {
+        return notifications;
+    }
+
+    public JCheckBox getAutoUpdate() {
+        return autoUpdate;
     }
 }

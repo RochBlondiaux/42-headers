@@ -8,6 +8,8 @@ public class Header {
 
     private final Author author;
     private String raw;
+    private boolean notificationEnabled;
+    private boolean autoSaveEnabled;
 
     public Header(Author author, String raw) {
         this.author = author;
@@ -24,5 +26,21 @@ public class Header {
 
     public void setRaw(String raw) {
         this.raw = raw;
+    }
+
+    public boolean areNotificationEnabled() {
+        return notificationEnabled;
+    }
+
+    public void setNotificationEnabled(boolean notificationEnabled) {
+        this.notificationEnabled = notificationEnabled;
+    }
+
+    public boolean isAutoSaveEnabled() {
+        return autoSaveEnabled;
+    }
+
+    public void setAutoSaveEnabled(boolean autoSaveEnabled) {
+        this.autoSaveEnabled = autoSaveEnabled;
     }
 }

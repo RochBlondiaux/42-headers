@@ -45,6 +45,9 @@ public class PluginSettings implements SearchableConfigurable {
         ui.getAuthorName().setText(HEADER.getAuthor().getName());
         ui.getAuthorEmail().setText(HEADER.getAuthor().getEmail());
         ui.getHeaderRaw().setText(HEADER.getRaw());
+        ui.getAutoUpdate().setSelected(HEADER.isAutoSaveEnabled());
+        ui.getNotifications().setSelected(HEADER.areNotificationEnabled());
+
         return ui.getPanel();
     }
 
@@ -52,7 +55,9 @@ public class PluginSettings implements SearchableConfigurable {
     public boolean isModified() {
         return !(ui.getAuthorName().getText().equals(HEADER.getAuthor().getName())
                 && ui.getAuthorEmail().getText().equals(HEADER.getAuthor().getEmail())
-                && ui.getHeaderRaw().getText().equals(HEADER.getRaw()));
+                && ui.getHeaderRaw().getText().equals(HEADER.getRaw())
+                && ui.getNotifications().isSelected() == HEADER.areNotificationEnabled()
+                && ui.getAutoUpdate().isSelected() == HEADER.isAutoSaveEnabled());
     }
 
     @Override
@@ -60,6 +65,8 @@ public class PluginSettings implements SearchableConfigurable {
         HEADER.setRaw(ui.getHeaderRaw().getText());
         HEADER.getAuthor().setName(ui.getAuthorName().getText());
         HEADER.getAuthor().setEmail(ui.getAuthorEmail().getText());
+        HEADER.setAutoSaveEnabled(ui.getAutoUpdate().isSelected());
+        HEADER.setNotificationEnabled(ui.getNotifications().isSelected());
         ConfigurationUtils.save(HEADER);
     }
 }

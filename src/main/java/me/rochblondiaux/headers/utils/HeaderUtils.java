@@ -1,5 +1,7 @@
 package me.rochblondiaux.headers.utils;
 
+import com.intellij.notification.NotificationType;
+import com.intellij.notification.Notifications;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
@@ -9,6 +11,7 @@ import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.WindowManager;
 import me.rochblondiaux.headers.model.Header;
+import me.rochblondiaux.headers.model.HeaderNotification;
 import me.rochblondiaux.headers.model.PluginSettings;
 
 import java.awt.*;
@@ -38,8 +41,18 @@ public class HeaderUtils {
                     "/* ************************************************************************** */\n";
 
     public static void insert(VirtualFile file, Editor editor) {
-        if (Objects.isNull(file) || file.isDirectory())
+        if (Objects.isNull(file) || file.isDirectory()) {
+            Notifications.Bus.notify(new HeaderNotification(
+                    "Cannot insert or update header",
+                    "Document or editor is null. Click on the editor and try again.",
+                    NotificationType.ERROR));
             return;
+        } else if (!file.isWritable()) {
+            editor.getDocument().fireReadOnlyModificationAttempt();
+            Notifications.Bus.notify(new HeaderNotification("Cannot insert or update header",
+                    "The file is not writable.", NotificationType.WARNING));
+            return;
+        }
         if (hasHeader(file)) {
             update(file);
             return;
@@ -55,11 +68,25 @@ public class HeaderUtils {
     }
 
     public static void update(VirtualFile file) {
-        if (Objects.isNull(file) || file.isDirectory() || !hasHeader(file))
+        if (Objects.isNull(file) || file.isDirectory() || !hasHeader(file)) {
+            Notifications.Bus.notify(new HeaderNotification(
+                    "Cannot insert or update header",
+                    "Document or editor is null. Click on the editor and try again.",
+                    NotificationType.ERROR));
             return;
+        } else if (!file.isWritable()) {
+            Notifications.Bus.notify(new HeaderNotification("Cannot insert or update header",
+                    "The file is not writable.", NotificationType.WARNING));
+            return;
+        }
         Document doc = FileDocumentManager.getInstance().getDocument(file);
-        if (Objects.isNull(doc))
+        if (Objects.isNull(doc)) {
+            Notifications.Bus.notify(new HeaderNotification(
+                    "Cannot insert or update header",
+                    "Document or editor is null. Click on the editor and try again.",
+                    NotificationType.ERROR));
             return;
+        }
         boolean isMakefile = file.getName().equalsIgnoreCase("Makefile");
         Header header = PluginSettings.HEADER;
         String raw = StringUtils.format(file.getName(), isMakefile, true);
@@ -78,6 +105,9 @@ public class HeaderUtils {
                         }
                     });
                 });
+        if (header.areNotificationEnabled())
+            Notifications.Bus.notify(new HeaderNotification("Header updated!",
+                    file.getName() + " header has been updated successfully.", NotificationType.INFORMATION));
     }
 
     public static boolean hasHeader(VirtualFile file) {

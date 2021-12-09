@@ -2,6 +2,7 @@ package me.rochblondiaux.headers.listener;
 
 import com.intellij.openapi.vfs.newvfs.BulkFileListener;
 import com.intellij.openapi.vfs.newvfs.events.VFileEvent;
+import me.rochblondiaux.headers.model.PluginSettings;
 import me.rochblondiaux.headers.utils.HeaderUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -16,7 +17,7 @@ public class FileSaveListener implements BulkFileListener {
     @Override
     public void after(@NotNull List<? extends VFileEvent> events) {
         events.forEach(e -> {
-            if (e.isFromSave() || e.isFromRefresh())
+            if (e.isFromSave() || e.isFromRefresh() && PluginSettings.HEADER.isAutoSaveEnabled())
                 HeaderUtils.update(e.getFile());
         });
     }

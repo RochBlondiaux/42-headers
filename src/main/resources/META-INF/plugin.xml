@@ -9,7 +9,9 @@
 
     <!-- please see https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html
          on how to target different products -->
-    <depends>com.intellij.java</depends>
+    <depends>com.intellij.modules.lang</depends>
+
+    <idea-version since-build="201" until-build="213.*"/>
 
     <extensions defaultExtensionNs="com.intellij">
         <applicationConfigurable groupId="root" displayName="42 Header" id="preferences.42Header"

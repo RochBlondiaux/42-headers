@@ -1,9 +1,13 @@
 package me.rochblondiaux.headers.model;
 
+import com.intellij.openapi.fileEditor.FileDocumentManager;
+import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.options.SearchableConfigurable;
 import com.intellij.openapi.util.NlsContexts;
+import com.intellij.ui.EditorNotificationPanel;
 import me.rochblondiaux.headers.ui.SettingsUI;
 import me.rochblondiaux.headers.utils.ConfigurationUtils;
+import me.rochblondiaux.headers.utils.HeaderUtils;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

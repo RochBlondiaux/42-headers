@@ -1,5 +1,7 @@
 package me.rochblondiaux.headers.model;
 
+import java.util.Objects;
+
 /**
  * @author Roch Blondiaux
  * www.roch-blondiaux.com
@@ -28,5 +30,14 @@ public class Author {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public boolean isValid() {
+        return Objects.nonNull(name)
+                && Objects.nonNull(email)
+                && !email.isEmpty()
+                && !email.isBlank()
+                && !name.isEmpty()
+                && !name.isBlank();
     }
 }

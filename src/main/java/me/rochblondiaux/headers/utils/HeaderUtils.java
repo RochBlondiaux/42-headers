@@ -40,6 +40,28 @@ public class HeaderUtils {
                     "/*                                                                            */\n" +
                     "/* ************************************************************************** */\n";
 
+    public static boolean isHeaderValid() {
+        Header header = PluginSettings.HEADER;
+        if (header.isValid())
+            return true;
+        if (Objects.isNull(header.getAuthor().getName()) || header.getAuthor().getName().isEmpty())
+            Notifications.Bus.notify(new HeaderNotification(
+                    "Cannot insert or update header",
+                    "Author name is null.",
+                    NotificationType.ERROR));
+        else if (Objects.isNull(header.getAuthor().getEmail()) || header.getAuthor().getEmail().isEmpty())
+            Notifications.Bus.notify(new HeaderNotification(
+                    "Cannot insert or update header",
+                    "Author email is null.",
+                    NotificationType.ERROR));
+        else if (Objects.isNull(header.getRaw()) || header.getRaw().isEmpty())
+            Notifications.Bus.notify(new HeaderNotification(
+                    "Cannot insert or update header",
+                    "Header template is null.",
+                    NotificationType.ERROR));
+        return false;
+    }
+
     public static void insert(VirtualFile file, Editor editor) {
         if (Objects.isNull(file) || file.isDirectory()) {
             Notifications.Bus.notify(new HeaderNotification(
@@ -52,7 +74,8 @@ public class HeaderUtils {
             Notifications.Bus.notify(new HeaderNotification("Cannot insert or update header",
                     "The file is not writable.", NotificationType.WARNING));
             return;
-        }
+        } else if (!isHeaderValid())
+            return;
         if (hasHeader(file)) {
             update(file);
             return;
@@ -64,6 +87,7 @@ public class HeaderUtils {
         getActiveProject().ifPresent(project -> {
             Runnable runnable = () -> editor.getDocument().insertString(0, raw);
             WriteCommandAction.runWriteCommandAction(project, runnable);
+            FileDocumentManager.getInstance().saveDocument(editor.getDocument());
         });
     }
 
@@ -78,7 +102,8 @@ public class HeaderUtils {
             Notifications.Bus.notify(new HeaderNotification("Cannot insert or update header",
                     "The file is not writable.", NotificationType.WARNING));
             return;
-        }
+        } else if (!isHeaderValid())
+            return;
         Document doc = FileDocumentManager.getInstance().getDocument(file);
         if (Objects.isNull(doc)) {
             Notifications.Bus.notify(new HeaderNotification(

@@ -9,6 +9,7 @@ import com.intellij.notification.NotificationType;
  */
 public class HeaderNotification extends Notification {
 
+
     public HeaderNotification(String title, String message, NotificationType type) {
         super("42Headers", null, "42 Headers", title, message, type, null);
     }

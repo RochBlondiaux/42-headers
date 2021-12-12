@@ -1,5 +1,7 @@
 package me.rochblondiaux.headers.model;
 
+import java.util.Objects;
+
 /**
  * @author Roch Blondiaux
  * www.roch-blondiaux.com
@@ -42,5 +44,12 @@ public class Header {
 
     public void setAutoSaveEnabled(boolean autoSaveEnabled) {
         this.autoSaveEnabled = autoSaveEnabled;
+    }
+
+    public boolean isValid() {
+        return Objects.nonNull(author)
+                && author.isValid()
+                && Objects.nonNull(raw)
+                && !raw.isEmpty();
     }
 }

@@ -1,5 +1,6 @@
 package me.rochblondiaux.headers.utils;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.notification.NotificationType;
 import com.intellij.notification.Notifications;
 import com.intellij.openapi.command.WriteCommandAction;
@@ -8,6 +9,9 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
+import com.intellij.openapi.ui.InputValidator;
+import com.intellij.openapi.ui.Messages;
+import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.WindowManager;
 import me.rochblondiaux.headers.model.Header;
@@ -40,10 +44,7 @@ public class HeaderUtils {
                     "/*                                                                            */\n" +
                     "/* ************************************************************************** */\n";
 
-    public static boolean isHeaderValid() {
-        Header header = PluginSettings.HEADER;
-        if (header.isValid())
-            return true;
+    public static void showInvalidHeaderNotification(Header header) {
         if (Objects.isNull(header.getAuthor().getName()) || header.getAuthor().getName().isEmpty())
             Notifications.Bus.notify(new HeaderNotification(
                     "Cannot insert or update header",
@@ -59,6 +60,48 @@ public class HeaderUtils {
                     "Cannot insert or update header",
                     "Header template is null.",
                     NotificationType.ERROR));
+    }
+
+    public static boolean isHeaderValid() {
+        Header header = PluginSettings.HEADER;
+        if (header.isValid())
+            return true;
+        getActiveProject()
+                .ifPresentOrElse(project -> {
+                    Messages.InputDialog dialog = new Messages.InputDialog(project,
+                            "Author name is invalid!\nPlease prompt your intranet username:",
+                            "42 Headers", IconLoader.getIcon("/logo.png"), header.getAuthor().getName(),
+                            new InputValidator() {
+                                @Override
+                                public boolean checkInput(String entry) {
+                                    return entry != null && !entry.isEmpty();
+                                }
+
+                                @Override
+                                public boolean canClose(String entry) {
+                                    return checkInput(entry);
+                                }
+                            });
+
+                    dialog.centerRelativeToParent();
+                    if (!dialog.showAndGet()){
+                        showInvalidHeaderNotification(header);
+                        return;
+                    }
+                    final String input = dialog.getInputString();
+                    if (input != null) {
+                        header.getAuthor().setName(input);
+                        if (header.getAuthor().getEmail().isEmpty())
+                            header.getAuthor().setEmail(input + "@student.42-lyon.fr");
+                        ConfigurationUtils.save(header);
+                        Notifications.Bus.notify(new HeaderNotification("Updated login",
+                                "Login: " + header.getAuthor().getName() + ".",
+                                NotificationType.INFORMATION));
+                    } else
+                        Notifications.Bus.notify(new HeaderNotification("Oops",
+                                "Your login has not been updated.",
+                                NotificationType.WARNING));
+                }, () -> showInvalidHeaderNotification(header));
         return false;
     }
 
